@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>
+		{% if title %}
+			{{ title }} | Anythingbut.me
+		{% else %}
+		Anythingbut.me
+		{% endif %}
+	</title>
+
+	<link rel="icon" type="image/png" href="{{ url_for('static',filename='favicon-32x32.png')}}" sizes="32x32" />
+	<link rel="icon" type="image/png" href="{{ url_for('static',filename='favicon-16x16.png')}}" sizes="16x16" />
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans|Titillium+Web:400,600,700&subset=latin,vietnamese' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="{{ url_for('static',filename='katze.css')}}" type="text/css" />
+</head>
+
+<body>
+	<header id="header">
+		<div class="transparentoverlay centerparent">
+			<div class="centerchild">
+				<div id="logo"><a href="/">
+					<span class="whitetext">Anythingbut</span><span class="bluetext">.me</span></a></div>
+			</div>
+		</div>
+	</header>
+
+	<nav>
+			<ul>
+				<li><a href="/">Home</a></li>
+			</ul>
+	</nav>
+
+	<div id="content">
+		{% block content %}{% endblock %}
+	</div>
+
+	<div id="lol">Peekaboo</div>
+	<footer class="centerparent">
+		<p class="centerchild">Anythingbut.me &copy; 2017 F3rb. Powered by Python and Flask.</p>
+	</footer>
+</body>
+
+</html>
+
