@@ -4,8 +4,8 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>
-		{% if title %}
-			{{ title }} | Anythingbut.me
+		{% if meta and meta['title'] %}
+			{{ meta['title'] }} | Anythingbut.me
 		{% else %}
 		Anythingbut.me
 		{% endif %}
@@ -35,6 +35,16 @@
 	</nav>
 
 	<div id="content">
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+			<ul id=flash>
+				{% for message in messages %}
+				<li>{{ message }}</li>
+				{% endfor %}
+			</ul>
+			{% endif %}
+		{% endwith %}
+
 		{% block content %}{% endblock %}
 	</div>
 

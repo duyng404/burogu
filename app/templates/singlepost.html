@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+	<article>
+		{% if meta and meta['title'] %}
+			<h1>{{ meta['title'] }}</h1>
+		{% endif %}
+		{% if meta and meta['date'] %}<p class="meta-post">{{ meta['date'] }}</p>{% endif %}
+		{{ content }}
+	</article>
+{% endblock %}

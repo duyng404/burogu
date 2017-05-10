@@ -101,6 +101,21 @@ nav a:hover{
 	color:#00B6CE;
 }
 
+#flash{
+	margin:0;
+	padding:0;
+}
+
+#flash li{
+	margin:10px 0 0 0;
+	display:block;
+	padding: 10px 20px;
+	color: #333;
+	background-color: #ffa;
+	border-radius: 10px;
+	font-size:.8em;
+}
+
 #lol{
 	width: 100%;
 	background-color: #00B6CE;
