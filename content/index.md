@@ -12,8 +12,6 @@ I am also a wannabe H4xx0R, a Blizzard fanboy, and a Vocaloid maniac.
 
 This is my personal website where I would put my cool projects. IF I HAD ANY.
 
-JK there's a link to a PokemonGo Map up there so you can check it out. It only scans the area around Gustavus unfortunately.
-
 Anyway you can contact me at dnguyen4 (at) gustavus (dot) edu. Send me memes. Thanks.
 
 Anyway check me out on social media (or nah, I post weird stuff)
