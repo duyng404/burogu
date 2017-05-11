@@ -3,6 +3,7 @@ from app import app
 import os
 import markdown
 import frontmatter
+from operator import itemgetter
 
 # Helper functions
 def showfile(file):
@@ -10,9 +11,43 @@ def showfile(file):
         raw = f.read()
     meta = frontmatter.loads(raw)
     content = Markup(markdown.markdown(raw,['markdown.extensions.extra','markdown.extensions.meta']))
+    meta.metadata = dict((k.lower(), v) for k,v in meta.metadata.items())
     return render_template('singlepost.html',
             meta=meta,
             content=content)
+
+def mdfileexists(path):
+    for filename in os.listdir(path):
+        if filename[-3:]==".md":
+            return True
+
+def listfolder(origpath):
+    path=os.path.join(app.config['CONTENT_DIR'],origpath)
+    # List of all the posts that will be sent to template
+    listofdata = []
+    # Loop through all md files in directory
+    for filename in os.listdir(path):
+        # If it's a dir or not a md file, then skip
+        if os.path.isdir(os.path.join(path,filename)) or filename[-3:]!=".md":
+            continue
+        # open and parse through frontmatter
+        with open(os.path.join(path,filename)) as f:
+            raw = f.read()
+        meta, content = frontmatter.parse(raw)
+        # turn all meta tags to lowercase
+        meta = dict((k.lower(), v) for k,v in meta.items())
+        # convert all of them to proper markup
+        content = Markup(markdown.markdown(raw,['markdown.extensions.extra','markdown.extensions.meta']))
+        # if date tag doesn't exist, add it as empty string
+        if 'date' not in meta: meta['date']=''
+        # add link to individual post in meta
+        meta['url']=os.path.join(origpath,filename)
+        # append it to the list
+        listofdata.append((meta, content))
+    # sort the list of posts by date
+    listofdata = sorted(listofdata, key=lambda k: k[0]['date'], reverse=True)
+    return render_template('listposts.html',
+            posts=listofdata)
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -30,16 +65,20 @@ def catch_all(path):
     # Pages other than index
     if path and path!='index':
         # If theres a md file
-        if os.path.isfile(app.config['CONTENT_DIR']+'/'+path+'.md'):
-            return showfile(app.config['CONTENT_DIR']+'/'+path+'.md')
+        if os.path.isfile(os.path.join(app.config['CONTENT_DIR'],path+'.md')):
+            return showfile(os.path.join(app.config['CONTENT_DIR'],path+'.md'))
         # If theres a folder
-        elif os.path.isdir(app.config['CONTENT_DIR']+'/'+path):
-            if os.path.isfile(app.config['CONTENT_DIR']+'/'+path+'/index.md'):
-                return showfile(app.config['CONTENT_DIR']+'/'+path+'/index.md')
+        elif os.path.isdir(os.path.join(app.config['CONTENT_DIR'],path)):
+            # If there is an index.md in the folder
+            if os.path.isfile(os.path.join(app.config['CONTENT_DIR'],path,'index.md')):
+                return showfile(os.path.join(app.config['CONTENT_DIR'],path,'index.md'))
+            # If not, are there any md file at all? If there is, list all the md files
+            if mdfileexists(os.path.join(app.config['CONTENT_DIR'],path)):
+                return listfolder(path)
         # 404
         else:
-            return showfile(app.config['CONTENT_DIR']+'/404.md')
+            return showfile(os.path.join(app.config['CONTENT_DIR'],'404.md'))
 
     # Else they are asking for the homepage
     else:
-        return showfile(app.config['CONTENT_DIR']+'/index.md')
+        return showfile(os.path.join(app.config['CONTENT_DIR'],'index.md'))

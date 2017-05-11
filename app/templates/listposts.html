@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+	<h1>Name of folder here</h1>
+	{% for post in posts %}
+		<article>
+			<h2><a href="/{{ post[0]['url'] }}">
+			{% if post[0] and post[0]['title'] %}
+				{{ post[0]['title'] }}
+			{% else %}
+				Untitled
+			{% endif %}
+			</a></h2>
+			{% if post[0] and post[0]['date'] %}<p class="meta-post">{{ post[0]['date'] }}</p>{% endif %}
+			<p>{{ post[0]['url'] }}</p>
+			{{ post[1]|truncate(200) }}
+		</article>
+	{% endfor %}
+{% endblock %}

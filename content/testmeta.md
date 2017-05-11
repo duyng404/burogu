@@ -1,7 +1,7 @@
 ---
-title: Tokyo I
-date: 2017/05/04
-tags: journal, tokyo
+Title: Tokyo I
+Date: 2017/05/04
+Tags: journal, tokyo
 ---
 
 05:49PM
