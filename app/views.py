@@ -21,6 +21,16 @@ def mdfileexists(path):
         if filename[-3:]==".md":
             return True
 
+def getintro(text):
+    i=0
+    res=[]
+    for word in text.split():
+        res.append(word)
+        i+=1
+        if i>app.config['INTRO_LENGTH']: break
+    return ' '.join(res)
+
+
 def listfolder(origpath):
     path=os.path.join(app.config['CONTENT_DIR'],origpath)
     # List of all the posts that will be sent to template
@@ -36,18 +46,19 @@ def listfolder(origpath):
         meta, content = frontmatter.parse(raw)
         # turn all meta tags to lowercase
         meta = dict((k.lower(), v) for k,v in meta.items())
-        # convert all of them to proper markup
-        content = Markup(markdown.markdown(raw,['markdown.extensions.extra','markdown.extensions.meta']))
         # if date tag doesn't exist, add it as empty string
         if 'date' not in meta: meta['date']=''
         # add link to individual post in meta
         meta['url']=os.path.join(origpath,filename)
+        # get the intro text from each post
+        meta['intro']=getintro(content)
         # append it to the list
-        listofdata.append((meta, content))
+        listofdata.append(meta)
     # sort the list of posts by date
-    listofdata = sorted(listofdata, key=lambda k: k[0]['date'], reverse=True)
+    listofdata = sorted(listofdata, key=lambda k: k['date'], reverse=True)
     return render_template('listposts.html',
-            posts=listofdata)
+            posts=listofdata,
+            folder=origpath.split('/')[-1].title())
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
