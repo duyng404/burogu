@@ -1,4 +1,4 @@
-from flask import render_template, flash, Markup
+from flask import render_template, flash, Markup, request
 from app import app
 import os
 import markdown
@@ -30,8 +30,7 @@ def getintro(text):
         if i>app.config['INTRO_LENGTH']: break
     return ' '.join(res)
 
-
-def listfolder(origpath):
+def listfolder(origpath,page):
     path=os.path.join(app.config['CONTENT_DIR'],origpath)
     # List of all the posts that will be sent to template
     listofdata = []
@@ -56,10 +55,20 @@ def listfolder(origpath):
         listofdata.append(meta)
     # sort the list of posts by date
     listofdata = sorted(listofdata, key=lambda k: k['date'], reverse=True)
+    # check page number
+    if len(listofdata)-1 < (page-1)*app.config['PER_PAGE']:
+        flash('Invalid page number')
+        page = len(listofdata) // app.config['PER_PAGE']
+    # set up link for next and prev page
+    pagenav = (page-1, page, page+1 if page*app.config['PER_PAGE'] <= len(listofdata)-1 else 0)
+    # trim the data list to only contain current page
+    listofdata = listofdata[(page-1)*app.config['PER_PAGE']:(page-1)*app.config['PER_PAGE']+app.config['PER_PAGE']]
     return render_template('listposts.html',
             posts=listofdata,
-            folder=origpath.split('/')[-1].title())
+            folder=origpath.split('/')[-1].title(),
+            pagenav=pagenav)
 
+# The only function that matters
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
@@ -73,6 +82,17 @@ def catch_all(path):
     if len(path)>=4 and path[-4:]=='.html':
         path=path[:-4]
 
+    # argument testing
+    page = request.args.get('p')
+    try:
+        if page != None: page = int(page)
+    except ValueError:
+        page = 1
+        flash('Something wrong with your url...')
+    if page == None: page = 1
+    #if page != None: flash('page = '+str(page))
+    #if path != None: flash('path = '+path)
+
     # Pages other than index
     if path and path!='index':
         # If theres a md file
@@ -85,7 +105,7 @@ def catch_all(path):
                 return showfile(os.path.join(app.config['CONTENT_DIR'],path,'index.md'))
             # If not, are there any md file at all? If there is, list all the md files
             if mdfileexists(os.path.join(app.config['CONTENT_DIR'],path)):
-                return listfolder(path)
+                return listfolder(path,page)
         # 404
         else:
             return showfile(os.path.join(app.config['CONTENT_DIR'],'404.md'))

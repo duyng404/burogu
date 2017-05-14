@@ -153,6 +153,22 @@ footer a{
 	text-align: center;
 }
 
+#pagination{
+	height:40px;
+	text-align:center;
+}
+
+.pagenav{
+	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
+	font-weight: 600;
+}
+
+.pagenumber{
+	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
+	font-weight: 400;
+	color:#777;
+}
+
 /* --------------- RESPONSIVE -------------- */
 
 @media (max-width: 700px){
@@ -161,6 +177,8 @@ footer a{
 	nav li{display:inline;}
 	nav a{font-size:18px; padding:0 20px;}
 	#content{ width:90%; margin: 50px auto;}
+	.pagenav{ font-size:18px; }
+	.pagenumber{ font-size: 18px; }
 }
 
 @media (min-width: 700px) and (max-width: 1500px) {
@@ -169,6 +187,8 @@ footer a{
 	nav li{display:inline;}
 	nav a{font-size:24px; padding:0 40px;}
 	#content{ width:700px; margin: 80px auto;}
+	.pagenav{ font-size: 24px; }
+	.pagenumber{ font-size: 24px; }
 }
 
 @media (min-width: 1500px){
@@ -177,8 +197,9 @@ footer a{
 	nav li{display:inline;}
 	nav a{font-size:28px; padding:0 60px;}
 	#content{ width:850px; margin: 100px auto;}
+	.pagenav{ font-size: 28px; }
+	.pagenumber{ font-size: 28px; }
 }
-
 /* -------------- UTILITY CLASSES -------------- */
 
 .whitetext{ color: #fff; }
@@ -191,6 +212,18 @@ footer a{
 	top:50%;
 	left:50%;
 	transform:translate(-50%, -50%);
+}
+.leftchild{
+	position:absolute;
+	top:50%;
+	left:0%;
+	transform:translate(0%, -50%);
+}
+.rightchild{
+	position:absolute;
+	top:50%;
+	right:0%;
+	transform:translate(0%, -50%);
 }
 .transparentoverlay{ 
 	background-color: rgba(0, 0, 0, 0.6);
