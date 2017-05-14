@@ -1,9 +1,16 @@
-from flask import render_template, flash, Markup, request
-from app import app
+from flask import render_template, flash, Markup, request, redirect, url_for, g
+from flask_login import login_user, login_required, current_user,UserMixin,logout_user
+from app import app, logman
+from .forms import AuthForm
 import os
 import markdown
 import frontmatter
 from operator import itemgetter
+from werkzeug.security import check_password_hash
+
+@app.before_request
+def before_request():
+    g.user = current_user
 
 # Helper functions
 def showfile(file):
@@ -68,6 +75,56 @@ def listfolder(origpath,page):
             folder=origpath.split('/')[-1].title(),
             pagenav=pagenav)
 
+class User(UserMixin):
+    def __init__(self,id):
+        self.id = id
+
+theonlyuser = User('onlyuser')
+
+@logman.user_loader
+def load_user(id):
+    if id == 'onlyuser':
+        return theonlyuser
+    else:
+        return None
+
+def verify_password(password):
+    with open('pass.txt','r') as f:
+        hashedpass = f.read().rstrip()
+    return check_password_hash(hashedpass,password)
+
+@app.route('/auth',methods=['GET','POST'])
+def auth():
+    form = AuthForm()
+    if form.validate_on_submit():
+        if verify_password(form.password.data):
+            login_user(theonlyuser,form.remember.data)
+            flash('Logged In Successfully')
+            return redirect(request.args.get('next') or url_for('himitsu'))
+        flash('Invalid Password')
+    return render_template('auth.html',form=form)
+
+@app.route('/deauth')
+def deauth():
+    logout_user()
+    flash('You have been logged out')
+    return redirect(url_for('catch_all'))
+
+@app.route('/himitsu')
+@app.route('/journal')
+@login_required
+def himitsu():
+    # getting page number
+    page = request.args.get('p')
+    try:
+        if page != None: page = int(page)
+    except ValueError:
+        page = 1
+        flash('Something wrong with your url...')
+    if page == None: page = 1
+
+    return listfolder('journal',page)
+
 # The only function that matters
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -82,7 +139,7 @@ def catch_all(path):
     if len(path)>=4 and path[-4:]=='.html':
         path=path[:-4]
 
-    # argument testing
+    # getting page number
     page = request.args.get('p')
     try:
         if page != None: page = int(page)
@@ -90,8 +147,6 @@ def catch_all(path):
         page = 1
         flash('Something wrong with your url...')
     if page == None: page = 1
-    #if page != None: flash('page = '+str(page))
-    #if path != None: flash('path = '+path)
 
     # Pages other than index
     if path and path!='index':

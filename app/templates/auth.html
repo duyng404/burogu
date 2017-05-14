@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Password Required</h1>
+<form action="" method="post" name="login">
+	{{ form.hidden_tag() }}
+	<p>Enter password:</p>
+	{{ form.password() }}
+	<p>{{ form.remember() }} Remember Me</p>
+	<p>{{ form.submit() }}</p>
+</form>
+{% endblock %}

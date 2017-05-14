@@ -31,6 +31,9 @@
 	<nav>
 			<ul>
 				<li><a href="/">Home</a></li>
+				{% if current_user.is_authenticated %}
+					<li><a href={{ url_for('deauth') }}>Log out</a></li>
+				{% endif %}
 			</ul>
 	</nav>
 
