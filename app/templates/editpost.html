@@ -13,10 +13,25 @@
 		{% endif %}
 		{{ form.editor }}
 		{{ form.submit }}
+		<button type="button" id="generate">Generate</button>
 	</form>
 	<div id="target"></div>
 
+
+	<script src="{{ url_for('static', filename='moment.min.js') }}"></script>
 	<script src="https://cdn.rawgit.com/showdownjs/showdown/1.0.1/dist/showdown.min.js"></script>
+
+	<script type="text/javascript">
+var generatebutton = document.getElementById("generate");
+generatebutton.onclick = function(){
+	var filepath = document.getElementById("filepath");
+	var textarea = document.getElementById("editor");
+	filepath.value = "journal/"+moment().format("Y.MM.DD")+".md";
+	textarea.value = "---\nTitle\: \nDate\: "+moment().format("Y/MM/DD")+"\nTags\: \n---\n\n"+moment().format("HH:mmA")+"\n\n";
+	textarea.onkeyup();
+}
+	</script>
+
 	<script type="text/javascript">
 	f = function() {
 		var textarea = document.getElementById("editor");

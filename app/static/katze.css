@@ -253,8 +253,12 @@ form{
 	border:3px solid #00b6ce;
 }
 
-#submit{
-	display:block;
+#filepath:hover,#password:hover,#editor:hover{
+	border:3px solid #fff;
+}
+
+#submit,button{
+	display:inline-block;
 	background-color: #00b6ce;
 	border:0;
 	color:#fff;
@@ -268,7 +272,7 @@ form{
 	padding:0 2em 0 2em;
 }
 
-#submit:hover{
+#submit:hover,button:hover{
 	color:#00b6ce;
 	background-color:#fff;
 }
