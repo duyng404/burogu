@@ -1,28 +1,70 @@
 {% extends "base.html" %}
 {% block content %}
-<textarea id="source" rows="10" cols="82">
-</textarea>
-<hr/>
-<button id="runBtn" onClick="f()">Convert</button>
-<hr/>
-<div id="target"></div>
+	{% if title %}
+		<h1>{{ title }}</h1>
+	{% endif %}
+	<form method="post" name="edit">
+		{{ form.editor }}
+		{{ form.submit }}
+	</form>
+	<div id="target"></div>
 
-<script src="https://cdn.rawgit.com/showdownjs/showdown/1.0.1/dist/showdown.min.js"></script>
-<script type="text/javascript">
-f = function() {
-    var textarea = document.getElementById("source");
-    var preview = document.getElementById("target");
-	var converter = new showdown.Converter();
-    textarea.onkeyup = function() { preview.innerHTML = converter.makeHtml(textarea.value); }
-    textarea.onkeyup.call(textarea);
-}
-if (document.readyState === 'complete')
-    f();
-else if (window.addEventListener)
-    window.addEventListener("load", f, false);
-else if (window.attachEvent)
-    window.attachEvent("onload", f);
-else
-    f();
-</script>
+	<script src="https://cdn.rawgit.com/showdownjs/showdown/1.0.1/dist/showdown.min.js"></script>
+	<script type="text/javascript">
+	f = function() {
+		var textarea = document.getElementById("editor");
+		var preview = document.getElementById("target");
+		var converter = new showdown.Converter();
+		textarea.onkeyup = function() {
+			text = textarea.value;
+			trimmedtext = text.substring(text.lastIndexOf("---") + 4);
+			preview.innerHTML = converter.makeHtml(trimmedtext);
+		}
+		textarea.onkeyup.call(textarea);
+	}
+	if (document.readyState === 'complete')
+		f();
+	else if (window.addEventListener)
+		window.addEventListener("load", f, false);
+	else if (window.attachEvent)
+		window.attachEvent("onload", f);
+	else
+		f();
+	</script>
+
+	<script type="text/javascript">
+	var observe;
+	if (window.attachEvent) {
+		observe = function (element, event, handler) {
+			element.attachEvent('on'+event, handler);
+		};
+	}
+	else {
+		observe = function (element, event, handler) {
+			element.addEventListener(event, handler, false);
+		};
+	}
+	function init () {
+		var text = document.getElementById('editor');
+		function resize () {
+			text.style.height = 'auto';
+			text.style.height = text.scrollHeight+'px';
+		}
+		/* 0-timeout to get the already changed text */
+		function delayedResize () {
+			window.setTimeout(resize, 0);
+		}
+		observe(text, 'change',  resize);
+		observe(text, 'cut',     delayedResize);
+		observe(text, 'paste',   delayedResize);
+		observe(text, 'drop',    delayedResize);
+		observe(text, 'keyup', delayedResize);
+
+		text.focus();
+		text.select();
+		resize();
+	}
+
+	init();
+	</script>
 {% endblock %}

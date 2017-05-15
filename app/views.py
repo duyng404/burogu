@@ -99,7 +99,6 @@ def auth():
     if form.validate_on_submit():
         if verify_password(form.password.data):
             login_user(theonlyuser,form.remember.data)
-            flash('Logged In Successfully')
             return redirect(request.args.get('next') or url_for('himitsu'))
         flash('Invalid Password')
     return render_template('auth.html',form=form)
@@ -125,7 +124,7 @@ def himitsu():
     return listfolder('journal',page)
 
 @app.route('/edit',defaults={'path':''})
-@app.route('/edit/<path:path>')
+@app.route('/edit/<path:path>',methods=['GET','POST'])
 @login_required
 def edit(path):
     # if no file specified, list all files
@@ -148,9 +147,16 @@ def edit(path):
                     data[meta['url']] = meta
         return render_template('editlist.html',data=data)
     else:
-        flash('editing '+path)
-        form = EditForm()
-        return render_template('editpost2.html',form=form)
+        trupath=os.path.join(app.config['CONTENT_DIR'],path)
+        if os.path.isfile(trupath) and trupath[-3:]=='.md':
+            with open(trupath) as f:
+                raw = f.read()
+            form = EditForm()
+            form.editor.data=raw
+            return render_template('editpost.html',form=form,title=path,data=raw)
+        else:
+            flash('Invalid URL')
+            return render_template('singlepost.html')
 
 # The only function that matters
 @app.route('/', defaults={'path': ''})

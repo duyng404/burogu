@@ -8,5 +8,5 @@ class AuthForm(FlaskForm):
     submit = SubmitField('Log In')
 
 class EditForm(FlaskForm):
-    pagedown = TextAreaField('Enter your Markdown')
-    submit = SubmitField('Submit')
+    editor = TextAreaField('Go Ham.')
+    submit = SubmitField('Save')
