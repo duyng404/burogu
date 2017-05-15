@@ -1,7 +1,7 @@
 from flask import render_template, flash, Markup, request, redirect, url_for, g
 from flask_login import login_user, login_required, current_user,UserMixin,logout_user
 from app import app, logman
-from .forms import AuthForm, EditForm
+from .forms import AuthForm, EditForm, AddForm
 import os
 import markdown
 import frontmatter
@@ -135,7 +135,6 @@ def edit(path):
                 if not os.path.isdir(os.path.join(root,ff)) and not ff[-3:]==".md":
                     continue
                 with open(os.path.join(root,ff)) as f:
-                    print(ff)
                     meta, content = frontmatter.parse(f.read())
                     # turn all meta tags to lowercase
                     meta = dict((k.lower(), v) for k,v in meta.items())
@@ -148,15 +147,36 @@ def edit(path):
         return render_template('editlist.html',data=data)
     else:
         trupath=os.path.join(app.config['CONTENT_DIR'],path)
-        if os.path.isfile(trupath) and trupath[-3:]=='.md':
-            with open(trupath) as f:
-                raw = f.read()
-            form = EditForm()
-            form.editor.data=raw
-            return render_template('editpost.html',form=form,title=path,data=raw)
+        form = EditForm()
+        if form.validate_on_submit():
+            data = form.editor.data
+            with open(trupath,'w') as f:
+                f.write(data)
+            flash('Changes saved')
+            return redirect(url_for('edit'))
         else:
-            flash('Invalid URL')
-            return render_template('singlepost.html')
+            if os.path.isfile(trupath) and trupath[-3:]=='.md':
+                with open(trupath) as f:
+                    raw = f.read()
+                form.editor.data=raw
+                return render_template('editpost.html',form=form,title=path)
+            else:
+                flash('Invalid URL')
+                return render_template('singlepost.html')
+
+@app.route('/add',methods=['GET','POST'])
+@login_required
+def add():
+    form = AddForm()
+    if form.validate_on_submit():
+        data = form.editor.data
+        filepath = form.filepath.data
+        trupath = os.path.join(app.config['CONTENT_DIR'],filepath)
+        with open(trupath,'w') as f:
+            f.write(data)
+        flash('Changes saved')
+        return redirect(url_for('edit'))
+    return render_template('editpost.html',form=form,title='Add Post')
 
 # The only function that matters
 @app.route('/', defaults={'path': ''})

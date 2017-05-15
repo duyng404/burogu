@@ -3,7 +3,14 @@
 	{% if title %}
 		<h1>{{ title }}</h1>
 	{% endif %}
-	<form method="post" name="edit">
+	<form action="" method="post" name="edit">
+		{{ form.hidden_tag() }}
+		{% if form.filepath %}
+			{{ form.filepath }}
+			{% for error in form.errors.filepath %}
+				<span style="color: red;">[{{ error}}]</span>
+			{% endfor %}
+		{% endif %}
 		{{ form.editor }}
 		{{ form.submit }}
 	</form>

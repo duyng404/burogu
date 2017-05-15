@@ -207,19 +207,20 @@ form{
 	text-align:center;
 }
 
-#password{
+#password, #filepath{
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	display:block;
 	margin:0 0 15px 0;
 	width:100%;
-	background-color: rgba(30,30,30,0);
-	line-height:2em;
-	font-size:1.5em;
-	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
+	background-color: rgba(30,30,30,.5);
+	line-height:1.5em;
+	font-size:1.3em;
+	font-family: "Open Sans", "Roboto", Arial, sans-serif;
 	text-align: center;
 	color: #fff;
-	border-style: solid;
-	border-width: 0 0 3px 0;
-	border-color: #00b6ce;
+	border:3px solid #00b6ce;
 	outline: none;
 }
 
@@ -235,7 +236,11 @@ form{
 }
 
 #editor{
-	width:90%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	width:100%;
+	margin:20px 0 0 0 0;
 	min-height:50px;
 	padding:20px;
 	background-color: rgba(30,30,30,.5);
