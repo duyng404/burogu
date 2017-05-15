@@ -1,7 +1,7 @@
 from flask import render_template, flash, Markup, request, redirect, url_for, g
 from flask_login import login_user, login_required, current_user,UserMixin,logout_user
 from app import app, logman
-from .forms import AuthForm
+from .forms import AuthForm, EditForm
 import os
 import markdown
 import frontmatter
@@ -48,12 +48,12 @@ def listfolder(origpath,page):
             continue
         # open and parse through frontmatter
         with open(os.path.join(path,filename)) as f:
-            raw = f.read()
-        meta, content = frontmatter.parse(raw)
+            meta, content = frontmatter.parse(f.read())
         # turn all meta tags to lowercase
         meta = dict((k.lower(), v) for k,v in meta.items())
-        # if date tag doesn't exist, add it as empty string
+        # if date tag doesn't exist, add it as empty string. same with title
         if 'date' not in meta: meta['date']=''
+        if 'title' not in meta: meta['title']='Untitled'
         # add link to individual post in meta
         meta['url']=os.path.join(origpath,filename)
         # get the intro text from each post
@@ -122,8 +122,35 @@ def himitsu():
         page = 1
         flash('Something wrong with your url...')
     if page == None: page = 1
-
     return listfolder('journal',page)
+
+@app.route('/edit',defaults={'path':''})
+@app.route('/edit/<path:path>')
+@login_required
+def edit(path):
+    # if no file specified, list all files
+    if path=='':
+        data={}
+        for root,dirs,files in os.walk(app.config['CONTENT_DIR'], followlinks=True):
+            for ff in files:
+                if not os.path.isdir(os.path.join(root,ff)) and not ff[-3:]==".md":
+                    continue
+                with open(os.path.join(root,ff)) as f:
+                    print(ff)
+                    meta, content = frontmatter.parse(f.read())
+                    # turn all meta tags to lowercase
+                    meta = dict((k.lower(), v) for k,v in meta.items())
+                    # if date tag doesn't exist, add it as empty string
+                    if 'date' not in meta: meta['date']=''
+                    if 'title' not in meta: meta['title']='Untitled'
+                    # add link to individual post in meta
+                    meta['url']=os.path.join(os.path.relpath(root,app.config['CONTENT_DIR']),ff)
+                    data[meta['url']] = meta
+        return render_template('editlist.html',data=data)
+    else:
+        flash('editing '+path)
+        form = EditForm()
+        return render_template('editpost2.html',form=form)
 
 # The only function that matters
 @app.route('/', defaults={'path': ''})

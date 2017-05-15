@@ -172,7 +172,7 @@ footer a{
 /* --------------- RESPONSIVE -------------- */
 
 @media (max-width: 700px){
-	header{ height:300px; }
+	header{ height:100px; }
 	#logo{ font-size:40px; }
 	nav li{display:inline;}
 	nav a{font-size:18px; padding:0 20px;}
@@ -182,7 +182,7 @@ footer a{
 }
 
 @media (min-width: 700px) and (max-width: 1500px) {
-	header{height:400px;}
+	header{height:200px;}
 	#logo{font-size:60px;}
 	nav li{display:inline;}
 	nav a{font-size:24px; padding:0 40px;}
@@ -192,7 +192,7 @@ footer a{
 }
 
 @media (min-width: 1500px){
-	header{height:550px;}
+	header{height:350px;}
 	#logo{ font-size:70px; }
 	nav li{display:inline;}
 	nav a{font-size:28px; padding:0 60px;}
@@ -200,6 +200,63 @@ footer a{
 	.pagenav{ font-size: 28px; }
 	.pagenumber{ font-size: 28px; }
 }
+
+/* -------------- FORMS ----------------------- */
+
+form{
+	text-align:center;
+}
+
+#password{
+	display:block;
+	margin:0 0 15px 0;
+	width:100%;
+	background-color: rgba(30,30,30,0);
+	line-height:2em;
+	font-size:1.5em;
+	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
+	text-align: center;
+	color: #fff;
+	border-style: solid;
+	border-width: 0 0 3px 0;
+	border-color: #00b6ce;
+}
+
+#remember{
+	width:1.4em;
+	height:1.4em;
+	vertical-align:middle;
+}
+
+#rememberdiv label{
+	font-size:.8em;
+	vertical-align:middle;
+}
+
+input:focus{
+	outline:0;
+}
+
+#submit{
+	display:block;
+	background-color: #00b6ce;
+	border:0;
+	color:#fff;
+	cursor:pointer;
+	font-size:1.2em;
+	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
+	font-weight: 600;
+	text-transform: uppercase;
+	line-height:2em;
+	margin:auto;
+	padding:0 2em 0 2em;
+}
+
+#submit:hover{
+	color:#00b6ce;
+	background-color:#fff;
+}
+
 /* -------------- UTILITY CLASSES -------------- */
 
 .whitetext{ color: #fff; }
@@ -354,7 +411,7 @@ code{
 table{
 	margin: 2em auto 2em;
 	text-align: left;
-	line-height: 2em;
+	line-height: 2.5em;
 }
 
 th{
@@ -377,3 +434,7 @@ strong{
 em{
 	font-style: italic;
 }
+
+/*table tr:nth-child(odd) {
+   background-color: #3d3d3d;
+}*/

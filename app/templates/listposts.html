@@ -1,22 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-	<h1>{{ folder }}</h1>
+	<h1><a href="?p=1">{{ folder }}</a></h1>
 	{% for post in posts %}
 		<article>
-			<h2><a href="/{{ post['url'] }}">
-				{% if post['title'] %}
-					{{ post['title'] }}
-				{% else %}
-					Untitled
-				{% endif %}
-			</a></h2>
+			<h2><a href="/{{ post['url'] }}">{% if post['title'] %}{{ post['title'] }}{% endif %}</a></h2>
 			{% if post['date'] %}<p class="meta">{{ post['date'] }}</p>{% endif %}
 			<p>{{ post['intro'] }}...<p>
 		</article>
 	{% endfor %}
 	<div id="pagination" class="centerparent">
-		<span class="pagenav leftchild"><a href="?p={{ pagenav[0] }}">&lt;&lt; Newer</a></span>
+		{% if pagenav[0]!=0 %}
+			<span class="pagenav leftchild"><a href="?p={{ pagenav[0] }}">&lt;&lt; Newer</a></span>
+		{% endif %}
 		<span class="pagenumber centerchild">Page {{ pagenav[1] }}</span>
-		<span class="pagenav rightchild"><a href="?p={{ pagenav[2] }}">Older &gt;&gt;</a></span>
+		{% if pagenav[2]!=0 %}
+			<span class="pagenav rightchild"><a href="?p={{ pagenav[2] }}">Older &gt;&gt;</a></span>
+		{% endif %}
 	</div>
 {% endblock %}

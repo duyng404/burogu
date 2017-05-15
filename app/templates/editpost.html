@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<textarea id="source" rows="10" cols="82">
+</textarea>
+<hr/>
+<button id="runBtn" onClick="f()">Convert</button>
+<hr/>
+<div id="target"></div>
+
+<script src="https://cdn.rawgit.com/showdownjs/showdown/1.0.1/dist/showdown.min.js"></script>
+<script type="text/javascript">
+f = function() {
+    var textarea = document.getElementById("source");
+    var preview = document.getElementById("target");
+	var converter = new showdown.Converter();
+    textarea.onkeyup = function() { preview.innerHTML = converter.makeHtml(textarea.value); }
+    textarea.onkeyup.call(textarea);
+}
+if (document.readyState === 'complete')
+    f();
+else if (window.addEventListener)
+    window.addEventListener("load", f, false);
+else if (window.attachEvent)
+    window.attachEvent("onload", f);
+else
+    f();
+</script>
+{% endblock %}
