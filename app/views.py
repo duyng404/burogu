@@ -1,7 +1,7 @@
-from flask import render_template, flash, Markup, request, redirect, url_for, g
-from flask_login import login_user, login_required, current_user,UserMixin,logout_user
+from flask import render_template, flash, Markup, request, redirect, url_for, g, session
+from flask_login import login_user, login_required, current_user, UserMixin, logout_user
 from app import app, logman
-from .forms import AuthForm, EditForm, AddForm
+from .forms import AuthForm, EditForm
 import os
 import markdown
 import frontmatter
@@ -132,7 +132,7 @@ def edit(path):
         data={}
         for root,dirs,files in os.walk(app.config['CONTENT_DIR'], followlinks=True):
             for ff in files:
-                if not os.path.isdir(os.path.join(root,ff)) and not ff[-3:]==".md":
+                if not os.path.isdir(os.path.join(root,ff)) and not ff[-3:]==".md" and not ff[-7:]=='.hidden':
                     continue
                 with open(os.path.join(root,ff)) as f:
                     meta, content = frontmatter.parse(f.read())
@@ -147,18 +147,25 @@ def edit(path):
         return render_template('editlist.html',data=data)
     else:
         trupath=os.path.join(app.config['CONTENT_DIR'],path)
-        form = EditForm()
+        if 'file_in_process' in session and session['file_in_process']!='':
+            form = EditForm(session['file_in_process'])
+        else: form = EditForm()
         if form.validate_on_submit():
             data = form.editor.data
-            with open(trupath,'w') as f:
+            newfile = os.path.join(app.config['CONTENT_DIR'],form.filepath.data)
+            if 'file_in_process' in session and session['file_in_process']!='':
+                os.remove(os.path.join(app.config['CONTENT_DIR'],session['file_in_process']))
+            with open(newfile,'w') as f:
                 f.write(data)
             flash('Changes saved')
             return redirect(url_for('edit'))
         else:
-            if os.path.isfile(trupath) and trupath[-3:]=='.md':
+            if os.path.isfile(trupath) and (trupath[-3:]=='.md' or trupath[-7:]=='.hidden'):
                 with open(trupath) as f:
                     raw = f.read()
                 form.editor.data=raw
+                form.filepath.data=path
+                session['file_in_process']=path
                 return render_template('editpost.html',form=form,title=path)
             else:
                 flash('Invalid URL')
@@ -167,7 +174,7 @@ def edit(path):
 @app.route('/add',methods=['GET','POST'])
 @login_required
 def add():
-    form = AddForm()
+    form = EditForm()
     if form.validate_on_submit():
         data = form.editor.data
         filepath = form.filepath.data
@@ -176,6 +183,7 @@ def add():
             f.write(data)
         flash('Changes saved')
         return redirect(url_for('edit'))
+    session['file_in_process']=''
     return render_template('editpost.html',form=form,title='Add Post')
 
 # The only function that matters
