@@ -1,4 +1,4 @@
-#!/home/ryuko/code/burogu/flask/bin/python
+#!/var/www/burogu/flask/bin/python2
 
 # -*- coding: utf-8 -*-
 import re
