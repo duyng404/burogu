@@ -14,7 +14,7 @@
 	<link rel="icon" type="image/png" href="{{ url_for('static',filename='favicon-32x32.png')}}" sizes="32x32" />
 	<link rel="icon" type="image/png" href="{{ url_for('static',filename='favicon-16x16.png')}}" sizes="16x16" />
 	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans|Titillium+Web:400,600,700&subset=latin,vietnamese' rel='stylesheet' type='text/css'>
+	<link href='//fonts.googleapis.com/css?family=Open+Sans|Titillium+Web:400,600,700&subset=latin,vietnamese' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="{{ url_for('static',filename='katze.css')}}" type="text/css" />
 </head>
 
@@ -33,6 +33,7 @@
 				<li><a href="/">Home</a></li>
 				<li><a href="/tech">Tech blog</a></li>
 				{% if current_user.is_authenticated %}
+					<li><a href={{ url_for('himitsu') }}>秘密</a></li>
 					<li><a href={{ url_for('edit') }}>Edit</a></li>
 					<li><a href={{ url_for('deauth') }}>Log out</a></li>
 				{% endif %}

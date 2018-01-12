@@ -15,7 +15,7 @@ def before_request():
 # Helper functions
 def showfile(file):
     with open(file) as f:
-        raw = f.read()
+        raw = f.read().decode('utf-8')
     meta = frontmatter.loads(raw)
     content = Markup(markdown.markdown(raw,['markdown.extensions.extra','markdown.extensions.meta']))
     meta.metadata = dict((k.lower(), v) for k,v in meta.metadata.items())
@@ -48,7 +48,7 @@ def listfolder(origpath,page):
             continue
         # open and parse through frontmatter
         with open(os.path.join(path,filename)) as f:
-            meta, content = frontmatter.parse(f.read())
+            meta, content = frontmatter.parse(f.read().decode('utf-8'))
         # turn all meta tags to lowercase
         meta = dict((k.lower(), v) for k,v in meta.items())
         # if date tag doesn't exist, add it as empty string. same with title
@@ -90,10 +90,10 @@ def load_user(id):
 
 def verify_password(password):
     with open('pass.txt','r') as f:
-        hashedpass = f.read().rstrip()
+        hashedpass = f.read().decode('utf-8').rstrip()
     return check_password_hash(hashedpass,password)
 
-@app.route('/auth',methods=['GET','POST'])
+@app.route('/auth',methods=['GET','POST'], strict_slashes=False)
 def auth():
     form = AuthForm()
     if form.validate_on_submit():
@@ -103,14 +103,14 @@ def auth():
         flash('Invalid Password')
     return render_template('auth.html',form=form)
 
-@app.route('/deauth')
+@app.route('/deauth', strict_slashes=False)
 def deauth():
     logout_user()
     flash('You have been logged out')
     return redirect(url_for('catch_all'))
 
-@app.route('/himitsu')
-@app.route('/journal')
+@app.route('/himitsu', strict_slashes=False)
+@app.route('/journal', strict_slashes=False)
 @login_required
 def himitsu():
     # getting page number
@@ -123,8 +123,8 @@ def himitsu():
     if page == None: page = 1
     return listfolder('journal',page)
 
-@app.route('/edit',defaults={'path':''})
-@app.route('/edit/<path:path>',methods=['GET','POST'])
+@app.route('/edit',defaults={'path':''}, strict_slashes=False)
+@app.route('/edit/<path:path>',methods=['GET','POST'], strict_slashes=False)
 @login_required
 def edit(path):
     # if no file specified, list all files
@@ -135,7 +135,7 @@ def edit(path):
                 if not os.path.isdir(os.path.join(root,ff)) and not ff[-3:]==".md" and not ff[-7:]=='.hidden':
                     continue
                 with open(os.path.join(root,ff)) as f:
-                    meta, content = frontmatter.parse(f.read())
+                    meta, content = frontmatter.parse(f.read().decode('utf-8'))
                     # turn all meta tags to lowercase
                     meta = dict((k.lower(), v) for k,v in meta.items())
                     # if date tag doesn't exist, add it as empty string
@@ -156,13 +156,13 @@ def edit(path):
             if 'file_in_process' in session and session['file_in_process']!='':
                 os.remove(os.path.join(app.config['CONTENT_DIR'],session['file_in_process']))
             with open(newfile,'w') as f:
-                f.write(data)
+                f.write(data.encode("UTF-8"))
             flash('Changes saved')
             return redirect(url_for('edit'))
         else:
             if os.path.isfile(trupath) and (trupath[-3:]=='.md' or trupath[-7:]=='.hidden'):
                 with open(trupath) as f:
-                    raw = f.read()
+                    raw = f.read().decode('utf-8')
                 form.editor.data=raw
                 form.filepath.data=path
                 session['file_in_process']=path
@@ -171,7 +171,7 @@ def edit(path):
                 flash('Invalid URL')
                 return render_template('singlepost.html')
 
-@app.route('/add',methods=['GET','POST'])
+@app.route('/add',methods=['GET','POST'], strict_slashes=False)
 @login_required
 def add():
     form = EditForm()
@@ -180,14 +180,14 @@ def add():
         filepath = form.filepath.data
         trupath = os.path.join(app.config['CONTENT_DIR'],filepath)
         with open(trupath,'w') as f:
-            f.write(data)
+            f.write(data.encode("UTF-8"))
         flash('Changes saved')
         return redirect(url_for('edit'))
     session['file_in_process']=''
     return render_template('editpost.html',form=form,title='Add Post')
 
 # The only function that matters
-@app.route('/', defaults={'path': ''})
+@app.route('/', defaults={'path': ''}, strict_slashes=False)
 @app.route('/<path:path>')
 def catch_all(path):
     # Trim last '/' from path
