@@ -8,7 +8,6 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-flask/
 env/
 build/
 develop-eggs/
@@ -92,3 +91,6 @@ ENV/
 # Vim
 *.swp
 *.swo
+
+#flask
+flask/
