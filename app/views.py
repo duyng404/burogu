@@ -14,6 +14,8 @@ def before_request():
 
 # Helper functions
 def showfile(file):
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth',next=file))
     with open(file) as f:
         raw = f.read()
     meta = frontmatter.loads(raw)
@@ -95,6 +97,8 @@ def verify_password(password):
 
 @app.route('/auth',methods=['GET','POST'], strict_slashes=False)
 def auth():
+    if current_user.is_authenticated:
+        return redirect(url_for('catch_all'))
     form = AuthForm()
     if form.validate_on_submit():
         if verify_password(form.password.data):
