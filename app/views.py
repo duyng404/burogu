@@ -15,7 +15,7 @@ def before_request():
 # Helper functions
 def showfile(file):
     with open(file) as f:
-        raw = f.read().decode('utf-8')
+        raw = f.read()
     meta = frontmatter.loads(raw)
     content = Markup(markdown.markdown(raw,['markdown.extensions.extra','markdown.extensions.meta']))
     meta.metadata = dict((k.lower(), v) for k,v in meta.metadata.items())
@@ -48,7 +48,7 @@ def listfolder(origpath,page):
             continue
         # open and parse through frontmatter
         with open(os.path.join(path,filename)) as f:
-            meta, content = frontmatter.parse(f.read().decode('utf-8'))
+            meta, content = frontmatter.parse(f.read())
         # turn all meta tags to lowercase
         meta = dict((k.lower(), v) for k,v in meta.items())
         # if date tag doesn't exist, add it as empty string. same with title
@@ -90,7 +90,7 @@ def load_user(id):
 
 def verify_password(password):
     with open('pass.txt','r') as f:
-        hashedpass = f.read().decode('utf-8').rstrip()
+        hashedpass = f.read().rstrip()
     return check_password_hash(hashedpass,password)
 
 @app.route('/auth',methods=['GET','POST'], strict_slashes=False)
@@ -135,7 +135,7 @@ def edit(path):
                 if not os.path.isdir(os.path.join(root,ff)) and not ff[-3:]==".md" and not ff[-7:]=='.hidden':
                     continue
                 with open(os.path.join(root,ff)) as f:
-                    meta, content = frontmatter.parse(f.read().decode('utf-8'))
+                    meta, content = frontmatter.parse(f.read())
                     # turn all meta tags to lowercase
                     meta = dict((k.lower(), v) for k,v in meta.items())
                     # if date tag doesn't exist, add it as empty string
@@ -156,13 +156,13 @@ def edit(path):
             if 'file_in_process' in session and session['file_in_process']!='':
                 os.remove(os.path.join(app.config['CONTENT_DIR'],session['file_in_process']))
             with open(newfile,'w') as f:
-                f.write(data.encode("UTF-8"))
+                f.write(data)
             flash('Changes saved')
             return redirect(url_for('edit'))
         else:
             if os.path.isfile(trupath) and (trupath[-3:]=='.md' or trupath[-7:]=='.hidden'):
                 with open(trupath) as f:
-                    raw = f.read().decode('utf-8')
+                    raw = f.read()
                 form.editor.data=raw
                 form.filepath.data=path
                 session['file_in_process']=path
@@ -180,7 +180,7 @@ def add():
         filepath = form.filepath.data
         trupath = os.path.join(app.config['CONTENT_DIR'],filepath)
         with open(trupath,'w') as f:
-            f.write(data.encode("UTF-8"))
+            f.write(data)
         flash('Changes saved')
         return redirect(url_for('edit'))
     session['file_in_process']=''
