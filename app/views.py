@@ -13,9 +13,7 @@ def before_request():
     g.user = current_user
 
 # Helper functions
-def showfile(file):
-    if not current_user.is_authenticated:
-        return redirect(url_for('auth',next=file))
+def showfile(origpath,file):
     with open(file) as f:
         raw = f.read()
     meta = frontmatter.loads(raw)
@@ -27,7 +25,17 @@ def showfile(file):
 
 def mdfileexists(path):
     for filename in os.listdir(path):
-        if filename[-3:]==".md":
+        if filename.lower()[-3:]==".md":
+            return True
+
+def restrictfileexist(path):
+    for filename in os.listdir(path):
+        if filename.lower()==".restricted":
+            return True
+
+def nolistfileexist(path):
+    for filename in os.listdir(path):
+        if filename.lower()==".nolist":
             return True
 
 def getintro(text):
@@ -39,43 +47,62 @@ def getintro(text):
         if i>app.config['INTRO_LENGTH']: break
     return ' '.join(res)
 
-def listfolder(origpath,page):
-    path=os.path.join(app.config['CONTENT_DIR'],origpath)
-    # List of all the posts that will be sent to template
-    listofdata = []
-    # Loop through all md files in directory
-    for filename in os.listdir(path):
-        # If it's a dir or not a md file, then skip
-        if os.path.isdir(os.path.join(path,filename)) or filename[-3:]!=".md":
-            continue
-        # open and parse through frontmatter
-        with open(os.path.join(path,filename)) as f:
-            meta, content = frontmatter.parse(f.read())
-        # turn all meta tags to lowercase
-        meta = dict((k.lower(), v) for k,v in meta.items())
-        # if date tag doesn't exist, add it as empty string. same with title
-        if 'date' not in meta: meta['date']=''
-        if 'title' not in meta: meta['title']='Untitled'
-        # add link to individual post in meta
-        meta['url']=os.path.join(origpath,filename)
-        # get the intro text from each post
-        meta['intro']=getintro(content)
-        # append it to the list
-        listofdata.append(meta)
-    # sort the list of posts by date
-    listofdata = sorted(listofdata, key=lambda k: k['date'], reverse=True)
-    # check page number
-    if len(listofdata)-1 < (page-1)*app.config['PER_PAGE']:
-        flash('Invalid page number')
-        page = len(listofdata) // app.config['PER_PAGE']
-    # set up link for next and prev page
-    pagenav = (page-1, page, page+1 if page*app.config['PER_PAGE'] <= len(listofdata)-1 else 0)
-    # trim the data list to only contain current page
-    listofdata = listofdata[(page-1)*app.config['PER_PAGE']:(page-1)*app.config['PER_PAGE']+app.config['PER_PAGE']]
-    return render_template('listposts.html',
-            posts=listofdata,
-            folder=origpath.split('/')[-1].title(),
-            pagenav=pagenav)
+def listfolder(origpath,page,hasindex,listthefiles):
+    # if both is false, page is empty
+    if not hasindex and not listthefiles:
+        return render_template('nocontent.html')
+
+    else:
+        indexmeta='';indexcontent='';listofdata=[];folder='';pagenav=''
+        path=os.path.join(app.config['CONTENT_DIR'],origpath)
+        # if there is index to show
+        if hasindex:
+            with open(os.path.join(path,'index.md')) as f:
+                raw = f.read()
+            indexmeta = frontmatter.loads(raw)
+            indexcontent = Markup(markdown.markdown(raw,['markdown.extensions.extra','markdown.extensions.meta']))
+            indexmeta.metadata = dict((k.lower(), v) for k,v in indexmeta.metadata.items())
+        # if we decide to list the files
+        if listthefiles:
+            # List of all the posts that will be sent to template
+            listofdata = []
+            # Loop through all md files in directory
+            for filename in os.listdir(path):
+                # If it's a dir or not a md file or index.md file, then skip
+                if os.path.isdir(os.path.join(path,filename)) or filename.lower()[-3:]!=".md" or filename.lower()=='index.md':
+                    continue
+                # open and parse through frontmatter
+                with open(os.path.join(path,filename)) as f:
+                    meta, content = frontmatter.parse(f.read())
+                # turn all meta tags to lowercase
+                meta = dict((k.lower(), v) for k,v in meta.items())
+                # if date tag doesn't exist, add it as empty string. same with title
+                if 'date' not in meta: meta['date']=''
+                if 'title' not in meta: meta['title']='Untitled'
+                # add link to individual post in meta
+                meta['url']=os.path.join(origpath,filename)
+                # get the intro text from each post
+                meta['intro']=getintro(content)
+                # append it to the list
+                listofdata.append(meta)
+            # sort the list of posts by date
+            listofdata = sorted(listofdata, key=lambda k: k['date'], reverse=True)
+            # check page number
+            if len(listofdata)-1 < (page-1)*app.config['PER_PAGE']:
+                flash('Invalid page number')
+                page = len(listofdata) // app.config['PER_PAGE']
+            # set up link for next and prev page
+            pagenav = (page-1, page, page+1 if page*app.config['PER_PAGE'] <= len(listofdata)-1 else 0)
+            # trim the data list to only contain current page
+            listofdata = listofdata[(page-1)*app.config['PER_PAGE']:(page-1)*app.config['PER_PAGE']+app.config['PER_PAGE']]
+        return render_template('folderview.html',
+                hasindex=hasindex,listthefiles=listthefiles,
+                indexmeta=indexmeta,
+                indexcontent=indexcontent,
+                posts=listofdata,
+                folder=origpath.split('/')[-1].title(),
+                pagenav=pagenav)
+
 
 class User(UserMixin):
     def __init__(self,id):
@@ -103,7 +130,7 @@ def auth():
     if form.validate_on_submit():
         if verify_password(form.password.data):
             login_user(theonlyuser,form.remember.data)
-            return redirect(request.args.get('next') or url_for('himitsu'))
+            return redirect(request.args.get('next') or url_for('catch_all'))
         flash('Invalid Password')
     return render_template('auth.html',form=form)
 
@@ -113,19 +140,19 @@ def deauth():
     flash('You have been logged out')
     return redirect(url_for('catch_all'))
 
-@app.route('/himitsu', strict_slashes=False)
-@app.route('/journal', strict_slashes=False)
-@login_required
-def himitsu():
-    # getting page number
-    page = request.args.get('p')
-    try:
-        if page != None: page = int(page)
-    except ValueError:
-        page = 1
-        flash('Something wrong with your url...')
-    if page == None: page = 1
-    return listfolder('journal',page)
+#@app.route('/himitsu', strict_slashes=False)
+#@app.route('/journal', strict_slashes=False)
+#@login_required
+#def himitsu():
+#    # getting page number
+#    page = request.args.get('p')
+#    try:
+#        if page != None: page = int(page)
+#    except ValueError:
+#        page = 1
+#        flash('Something wrong with your url...')
+#    if page == None: page = 1
+#    return listfolder('journal',page)
 
 @app.route('/edit',defaults={'path':''}, strict_slashes=False)
 @app.route('/edit/<path:path>',methods=['GET','POST'], strict_slashes=False)
@@ -199,10 +226,10 @@ def catch_all(path):
         path=path[:-1]
 
     # Trim any file extension
-    if len(path)>=3 and path[-3:]=='.md':
-        path=path[:-3]
-    if len(path)>=4 and path[-4:]=='.html':
-        path=path[:-4]
+    #if len(path)>=3 and path[-3:]=='.md':
+    #    path=path[:-3]
+    #if len(path)>=4 and path[-5:]=='.html':
+    #    path=path[:-5]
 
     # getting page number
     page = request.args.get('p')
@@ -213,23 +240,42 @@ def catch_all(path):
         flash('Something wrong with your url...')
     if page == None: page = 1
 
+    # Traverse the path to see if any folder in between is restricted
+    splitted = path.split('/')
+    accpath = ''
+    for item in splitted[:-1]:
+        accpath += item
+        if restrictfileexist(os.path.join(app.config['CONTENT_DIR'],accpath)):
+            if not current_user.is_authenticated:
+                return redirect(url_for('auth',next=path))
+
     # Pages other than index
-    if path and path!='index':
+    if path and path!='index.html' and path!='index.md':
         # If theres a md file
-        if os.path.isfile(os.path.join(app.config['CONTENT_DIR'],path+'.md')):
-            return showfile(os.path.join(app.config['CONTENT_DIR'],path+'.md'))
+        if os.path.isfile(os.path.join(app.config['CONTENT_DIR'],path)):
+            return showfile(path,os.path.join(app.config['CONTENT_DIR'],path))
         # If theres a folder
         elif os.path.isdir(os.path.join(app.config['CONTENT_DIR'],path)):
-            # If there is an index.md in the folder
+            # If there is a .restricted file then require log in
+            if restrictfileexist(os.path.join(app.config['CONTENT_DIR'],path)):
+                if not current_user.is_authenticated:
+                    return redirect(url_for('auth',next=path))
+            hasindex=False
+            listthefiles=False
+            # Is there an index.md in the folder?
             if os.path.isfile(os.path.join(app.config['CONTENT_DIR'],path,'index.md')):
-                return showfile(os.path.join(app.config['CONTENT_DIR'],path,'index.md'))
-            # If not, are there any md file at all? If there is, list all the md files
+                hasindex=True
+            # are there any md file at all?
             if mdfileexists(os.path.join(app.config['CONTENT_DIR'],path)):
-                return listfolder(path,page)
+                listthefiles=True
+            # is there a .nolist file?
+            if nolistfileexist(os.path.join(app.config['CONTENT_DIR'],path)):
+                listthefiles=False
+            return listfolder(path,page,hasindex,listthefiles)
         # 404
         else:
-            return showfile(os.path.join(app.config['CONTENT_DIR'],'404.md'))
+            return showfile(path,os.path.join(app.config['CONTENT_DIR'],'404.md'))
 
     # Else they are asking for the homepage
     else:
-        return showfile(os.path.join(app.config['CONTENT_DIR'],'index.md'))
+        return showfile(path,os.path.join(app.config['CONTENT_DIR'],'index.md'))
