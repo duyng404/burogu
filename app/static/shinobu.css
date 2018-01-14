@@ -234,8 +234,8 @@ nav a:hover{
 	width: 100%;
 	background-color: #00B6CE;
 	color: #00B6CE;
-	font-size: 1.5rem;
-	height: 2rem;
+	font-size: 10px;
+	height: 10px;
 	text-align: center;
 	font-weight: 600;
 }
