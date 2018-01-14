@@ -1,22 +1,26 @@
-{% extends "base.html" %}
+{% extends "base-admin.html" %}
 {% block content %}
 	{% if title %}
-		<h1>{{ title }}</h1>
+		<h1 id="title">{{ title }}</h1>
 	{% endif %}
-	<form action="" method="post" name="edit">
-		{{ form.hidden_tag() }}
-		{% if form.filepath %}
-			{{ form.filepath }}
-			{% for error in form.errors.filepath %}
-				<span style="color: red;">[{{ error}}]</span>
-			{% endfor %}
-		{% endif %}
-		{{ form.editor }}
-		{{ form.submit }}
-		<button type="button" id="generate">Generate</button>
-	</form>
-	<div id="target"></div>
+		<form action="" method="post" name="edit">
+			{{ form.hidden_tag() }}
+			{{ form.submit }}
+			<button type="button" id="generate">Generate</button>
+			{% if form.filepath %}
+				{{ form.filepath }}
+				{% for error in form.errors.filepath %}
+					<span style="color: red;">[{{ error}}]</span>
+				{% endfor %}
+			{% endif %}
+			<div id="left">
+				{{ form.editor }}
+			</div><!--
 
+			--><div id="right">
+				<div id="target"></div>
+			</div>
+		</form>
 
 	<script src="{{ url_for('static', filename='moment.min.js') }}"></script>
 	<script src="{{ url_for('static', filename='showdown.min.js') }}"></script>

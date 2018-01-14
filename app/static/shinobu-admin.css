@@ -55,28 +55,41 @@ table {
 
 /* ----------- LAYOUT --------------- */
 
+html {
+	height: 100%;
+	background-color: var(--bg-color);
+}
+
 body {
-	margin: 0;
 	padding: 0;
+	position: relative;
 	border-top: 10px solid var(--highlight-color);
 	background-color: var(--bg-color);
 	color: white;
 }
 
-#all {
-	width: 800px;
-	margin: 0 auto;
+#content {
+	margin: 40px auto 100px;
+	width: 90%;
 }
 
-#left {
-	float: left;
-	width: 35%;
+/* -------------- COOL BACKGROUND -------------- */
+
+#imagefade{
+	width:100%;
+	height: 200px;
+	margin: 0 0 -150px 0;
+	background:
+		linear-gradient(
+		  rgba(0, 0, 0, 0.6),
+		  rgba(48, 48, 48, 1)
+		),
+		url("cyberpunk.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center center;
 }
 
-#right {
-	float: right;
-	width: 65%;
-}
 
 /* -------------- LOGO --------------- */
 
@@ -84,7 +97,10 @@ body {
 	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
 	font-weight: 700;
 	text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
-	text-align: right;
+	font-size: 2.4rem;
+	padding-right: 10px;
+	text-align: center;
+	margin: 40px auto 20px;
 }
 #logo a { text-decoration: none; }
 .whitetext { color:white; }
@@ -96,22 +112,24 @@ body {
 nav{
 	margin:0;
 	width: 100%;
+	font-size: 1rem;
 }
 
 nav ul{
 	list-style: none;
-	text-align: right;
+	text-align: center;
 	margin:0;
 	padding:0;
 }
 
+nav li{ display: inline; }
+
 nav a{
-	display: block;
-	width:100%;
 	color: var(--highlight-color);
+	display: inline-block;
+	padding: 0 20px;
 	height:2rem;
 	line-height: 2rem;
-	padding-right: 10px;
 	text-decoration: none;
 	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
 	font-weight: 600;
@@ -120,6 +138,38 @@ nav a{
 nav a:hover{
 	background-color: var(--highlight-color);
 	color: #fff;
+}
+
+/* ------------- RESPONSIVE ---------- */
+/* tablet & phone */
+@media (max-width: 900px){
+	html { font-size: 16px; }
+}
+
+/* desktop */
+@media (min-width: 1000px){
+	#flash {
+		width: 70%;
+		margin: 0 auto !important;
+	}
+	#left, #right {
+		width: 50%;
+		display: inline-block;
+		vertical-align: top;
+   	}
+	#right {
+		padding: 0 3%;
+	}
+}
+
+@media (min-width: 900px) and (max-width: 1500px) {
+	html { font-size: 18px; }
+	#imagefade { margin: 0 0 -120px 0;}
+}
+
+@media (min-width: 1500px){
+	html { font-size: 20px; }
+	#imagefade { margin: 0 0 -100px 0;}
 }
 
 /* ------------- FLASH ---------------*/
@@ -171,19 +221,19 @@ nav a:hover{
 /* ------------- FOOTER -------------- */
 
 #lol{
-	clear: both;
-	margin: 30px 0 0 0;
+	margin: 100px 0 0 0;
 	width: 100%;
 	background-color: #00B6CE;
 	color: #00B6CE;
-	font-size: 2rem;
+	font-size: 1.5rem;
 	height: 2rem;
 	text-align: center;
 	font-weight: 600;
 }
 
 footer{
-	height: 200px;
+	margin: 0;
+	height: 100px;
 	width: 100%;
 	background-color: #222;
 	color: #555 !important;
@@ -196,24 +246,6 @@ footer a{
 	border-bottom: 1px solid #555;
 }
 
-/* ------------- RESPONSIVE ---------- */
-@media (max-width: 800px){
-	html { font-size: 14px; }
-	#logo { font-size: 2rem; }
-}
-
-@media (min-width: 800px) and (max-width: 1500px) {
-	html { font-size: 18px; }
-	body { padding-top: 80px; }
-	#left { padding-right: 20px; }
-	#right { padding-left: 10px; margin-top: 130px; }
-	#logo{ font-size: 2.4rem; padding-right: 10px; }
-	nav { font-size: 1rem; margin-top: 40px; }
-}
-
-@media (min-width: 1500px){
-	#logo{ font-size: 10rem; }
-}
 
 /* -------------- FONTS & FORMATTING -------------- */
 
@@ -221,9 +253,22 @@ body{
 	font-family: "Open Sans", "Roboto", Arial, sans-serif;
 }
 
-#right{
+#content{
 	color:#aaa;
 	line-height: 1.7rem;
+}
+
+#title {
+	text-align: center;
+	margin: 40px 0 40px;
+}
+
+#right {
+	text-align: left;
+}
+
+#subtitle {
+	text-align: center;
 }
 
 h1,h2,h3,h4,h5,h6{
@@ -235,7 +280,7 @@ h1,h2,h3,h4,h5,h6{
 h1{
 	font-size: 3rem;
 	line-height: 3rem;
-	margin: 0;
+	margin:0;
 }
 
 h2{
@@ -349,6 +394,82 @@ th{
 
 td{
 	padding: 0 2em 0 .5em;
+}
+
+/* -------------- FORMS ----------------------- */
+
+form{
+	text-align:center;
+}
+
+#password, #filepath{
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	display:block;
+	margin:20px 0 15px 0;
+	width:100%;
+	background-color: rgba(30,30,30,.5);
+	line-height:1.5em;
+	font-size:1.3em;
+	font-family: "Open Sans", "Roboto", Arial, sans-serif;
+	text-align: center;
+	color: #fff;
+	border:3px solid #00b6ce;
+	outline: none;
+}
+
+#remember{
+	width:1.4em;
+	height:1.4em;
+	vertical-align:middle;
+}
+
+#rememberdiv label{
+	font-size:.8em;
+	vertical-align:middle;
+}
+
+#editor{
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	width:100%;
+	margin:20px 0 0 0 0;
+	min-height:50px;
+	padding:20px;
+	background-color: rgba(30,30,30,.5);
+	color:#bbb;
+	font-family: "Open Sans", "Roboto", Arial, sans-serif;
+	font-size:1em;
+	resize: none;
+	overflow:hidden;
+	outline:none;
+	border:3px solid #00b6ce;
+}
+
+#filepath:hover,#password:hover,#editor:hover{
+	border:3px solid #fff;
+}
+
+#submit,button{
+	display:inline-block;
+	background-color: #00b6ce;
+	border:0;
+	color:#fff;
+	cursor:pointer;
+	font-size:1.2em;
+	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
+	font-weight: 600;
+	text-transform: uppercase;
+	line-height:2em;
+	margin:auto;
+	padding:0 2em 0 2em;
+}
+
+#submit:hover,button:hover{
+	color:#00b6ce;
+	background-color:#fff;
 }
 
 /* -------------- UTILITY CLASSES -------------- */

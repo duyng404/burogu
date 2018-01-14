@@ -5,7 +5,7 @@ from wtforms import PasswordField, BooleanField, SubmitField, TextAreaField, Str
 from wtforms.validators import Required
 
 class AuthForm(FlaskForm):
-    password = PasswordField('Password',validators=[Required()], render_kw={"placeholder": "Password"})
+    password = PasswordField('Password',validators=[Required()], render_kw={"placeholder": "Password", "autofocus": True})
     remember = BooleanField('Keep me logged in')
     submit = SubmitField('Log In')
 

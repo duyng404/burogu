@@ -19,9 +19,10 @@
 </head>
 
 <body>
+	<div id="imagefade"></div>
 	<header id="header">
 			<div id="logo">
-				<a href="/"><span class="whitetext">anything</span><span class="yellowtext">but</span><br><span class="bluetext">.me</span></a>
+				<a href="/"><span class="whitetext">anything</span><span class="yellowtext">but</span><span class="bluetext">.me</span></a>
 			</div>
 	</header>
 
@@ -47,7 +48,9 @@
 		{% endif %}
 	{% endwith %}
 
-	{% block content %}{% endblock %}
+	<div id="content">
+		{% block content %}{% endblock %}
+	</div>
 </body>
 
 </html>
