@@ -1,0 +1,424 @@
+/* ----------- RESET ---------------*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+	box-sizing: border-box;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* ----------- GLOBAL --------------- */
+
+:root{
+	--bg-color: #303030;
+	--highlight-color: #00B6CE;
+	--darkwhite: #AAAAAA;
+}
+
+/* ----------- LAYOUT --------------- */
+
+html {
+	height: 100%;
+	background-color: #222;
+}
+
+body {
+	padding: 0;
+	position: relative;
+	border-top: 10px solid var(--highlight-color);
+	background-color: var(--bg-color);
+	color: white;
+}
+
+#all {
+	margin: 0 auto;
+}
+
+/* -------------- COOL BACKGROUND -------------- */
+
+#imagefade{
+	width:100%;
+	height: 200px;
+	background:
+		linear-gradient(
+		  rgba(0, 0, 0, 0.6),
+		  rgba(48, 48, 48, 1)
+		),
+		url("cyberpunk.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center center;
+}
+
+
+/* -------------- LOGO --------------- */
+
+#logo{
+	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
+	font-weight: 700;
+	text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
+	font-size: 2.4rem;
+	padding-right: 10px;
+}
+#logo a { text-decoration: none; }
+.whitetext { color:white; }
+.bluetext { color: var(--highlight-color); }
+.yellowtext { color: var(--darkwhite); }
+
+/* --------------- NAV ---------------- */
+
+nav{
+	margin:0;
+	width: 100%;
+	font-size: 1rem;
+}
+
+nav ul{
+	list-style: none;
+	text-align: right;
+	margin:0;
+	padding:0;
+}
+
+nav a{
+	color: var(--highlight-color);
+	height:2rem;
+	line-height: 2rem;
+	text-decoration: none;
+	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
+	font-weight: 600;
+}
+
+nav a:hover{
+	background-color: var(--highlight-color);
+	color: #fff;
+}
+
+/* ------------- RESPONSIVE ---------- */
+/* tablet & phone */
+@media (max-width: 900px){
+	html { font-size: 16px; }
+	#imagefade { margin: 0 0 -150px 0;}
+	#logo { text-align: center; margin: 40px auto 20px; }
+	#logo br { display:none; }
+	#all { width: 100%; padding: 0 5%; }
+	#right { margin-top: 40px; }
+	nav ul { text-align: center; }
+	nav li { display: inline; }
+	nav a { display: inline-block; padding: 0 20px; }
+}
+
+/* desktop */
+@media (min-width: 900px){
+	#logo { text-align: right; }
+	#left {
+		vertical-align: top;
+		display: inline-block;
+		width: 35%;
+		padding-right: 20px;
+		position: sticky;
+		top:40px;
+	}
+	#right {
+		display: inline-block;
+		width: 65%;
+		padding-left: 10px;
+	}
+	nav { margin-top: 40px; }
+	nav ul { text-align: right; }
+	nav a { display:block; width:100%; padding-right:10px; }
+}
+
+@media (min-width: 900px) and (max-width: 1500px) {
+	html { font-size: 18px; }
+	#imagefade { margin: 0 0 -120px 0;}
+	#all { width: 800px; }
+	#right { margin-top: 130px; }
+}
+
+@media (min-width: 1500px){
+	html { font-size: 20px; }
+	#imagefade { margin: 0 0 -100px 0;}
+	#all { width: 1100px; }
+	#right { margin-top: 140px; }
+}
+
+/* ------------- FLASH ---------------*/
+
+#flash{
+	margin:0;
+	padding:0;
+}
+
+#flash li{
+	margin:20px;
+	display:block;
+	padding: 10px 20px;
+	color: #333;
+	background-color: #ffa;
+	font-size:.8em;
+}
+
+/* ------------ METADATA & PAGINATION ------------- */
+
+.meta{
+	font-size: .7rem;
+	color:#aaa;
+	margin:0;
+}
+
+.meta-post{
+	font-size: .7rem;
+	color:#aaa;
+	margin:.2rem 0 2rem;
+}
+
+#pagination{
+	height:40px;
+	text-align:center;
+}
+
+.pagenav{
+	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
+	font-weight: 600;
+}
+
+.pagenumber{
+	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
+	font-weight: 400;
+	color:#777;
+}
+
+/* ------------- FOOTER -------------- */
+
+#lol{
+	margin: 100px 0 0 0;
+	width: 100%;
+	background-color: #00B6CE;
+	color: #00B6CE;
+	font-size: 1.5rem;
+	height: 2rem;
+	text-align: center;
+	font-weight: 600;
+}
+
+footer{
+	margin: 0;
+	height: 100px;
+	width: 100%;
+	background-color: #222;
+	color: #555 !important;
+	text-align: center;
+	font-size: 14px;
+}
+
+footer a{
+	color: #555 !important;
+	border-bottom: 1px solid #555;
+}
+
+
+/* -------------- FONTS & FORMATTING -------------- */
+
+body{
+	font-family: "Open Sans", "Roboto", Arial, sans-serif;
+}
+
+#right{
+	color:#aaa;
+	line-height: 1.7rem;
+}
+
+h1,h2,h3,h4,h5,h6{
+	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
+	color: #00B6CE;
+	font-weight: 600;
+}
+
+h1{
+	font-size: 3rem;
+	line-height: 3rem;
+	margin: 0;
+}
+
+h2{
+	font-size: 2rem;
+	line-height: 2rem;
+	margin: 2rem 0 0;
+}
+
+h3{
+	font-size: 1.5rem;
+	line-height: 1.5rem;
+	margin: 1rem 0 0;
+}
+
+h4,h5,h6{
+	font-size: 1.2rem;
+	line-height: 1.5rem;
+	margin: 1rem 0 0;
+	font-style: italic;	
+}
+
+p{
+	margin: 1rem 0 0;
+}
+
+a{
+	text-decoration: none;
+	color: #00B6CE;
+}
+
+a:visited{
+	color: #00B6CE;
+}
+
+a:hover{
+	color: #99c2ff;
+}
+
+ol{
+	list-style-type: decimal;
+	margin: 1em 0 0;
+	padding: 0 0 0 2.5em;
+}
+
+ul{
+	list-style-type: square;
+	margin: 1em 0 0;
+	padding: 0 0 0 2.5em;
+}
+
+blockquote {
+	border-left: 1em solid #555;
+	margin: 1em 10px 0;
+	padding: 0.5em 10px;
+	quotes: "\201C""\201D""\2018""\2019";
+}
+
+blockquote:before {
+	color: #666;
+	content: open-quote;
+	font-family: Times, serif;
+	font-size: 4.5em;
+	line-height: 0.1em;
+	margin-right: 0.2em;
+	vertical-align: -0.4em;
+}
+
+blockquote p {
+	display: inline;
+}
+
+pre {
+	width:95%;
+	overflow: auto;
+	font-family: monospace;
+	background-color: #404040;
+	margin: 1em auto 0;
+	padding: .5em 10px;
+}
+
+code{
+	font-family: monospace;
+	background-color: #404040;
+	padding: 0 4px;
+}
+
+strong{
+	font-weight: 600;
+}
+
+em{
+	font-style: italic;
+}
+
+/* -------------- TABLE ----------------- */
+
+table{
+	margin: 2em auto 2em;
+	text-align: left;
+	line-height: 2.5em;
+}
+
+th{
+	font-family: "Titillium Web", Tahoma, Arial, sans-serif;
+	font-size: 1.25em;
+	font-weight: 600;
+	color: #00B6CE;
+	border-bottom: 2px solid #00B6CE;
+	padding: 0 .5em .25em;
+}
+
+td{
+	padding: 0 2em 0 .5em;
+}
+
+/* -------------- UTILITY CLASSES -------------- */
+
+.centerparent{
+	position:relative;
+}
+.centerchild{
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translate(-50%, -50%);
+}
+.leftchild{
+	position:absolute;
+	top:50%;
+	left:0%;
+	transform:translate(0%, -50%);
+}
+.rightchild{
+	position:absolute;
+	top:50%;
+	right:0%;
+	transform:translate(0%, -50%);
+}
+.transparentoverlay{ 
+	background-color: rgba(0, 0, 0, 0.6);
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}

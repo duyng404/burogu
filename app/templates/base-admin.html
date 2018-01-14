@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>
+		{% if meta and meta['title'] %}
+			{{ meta['title'] }} | Anythingbut.me
+		{% else %}
+		Anythingbut.me
+		{% endif %}
+	</title>
+
+	<link rel="icon" type="image/png" href="{{ url_for('static',filename='favicon-32x32.png')}}" sizes="32x32" />
+	<link rel="icon" type="image/png" href="{{ url_for('static',filename='favicon-16x16.png')}}" sizes="16x16" />
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+	<link href='//fonts.googleapis.com/css?family=Open+Sans|Titillium+Web:400,600,700&subset=latin,vietnamese' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="{{ url_for('static',filename='shinobu-admin.css')}}" type="text/css" />
+</head>
+
+<body>
+	<header id="header">
+			<div id="logo">
+				<a href="/"><span class="whitetext">anything</span><span class="yellowtext">but</span><br><span class="bluetext">.me</span></a>
+			</div>
+	</header>
+
+	<nav>
+		<ul>
+			<li><a href="/">Home</a></li>
+			<li><a href="/tech">Tech blog</a></li>
+			{% if current_user.is_authenticated %}
+				<li><a href="/journal">秘密</a></li>
+				<li><a href={{ url_for('edit') }}>Edit</a></li>
+				<li><a href={{ url_for('deauth') }}>Log out</a></li>
+			{% endif %}
+		</ul>
+	</nav>
+
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+		<ul id=flash>
+			{% for message in messages %}
+			<li>{{ message }}</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	{% endwith %}
+
+	{% block content %}{% endblock %}
+</body>
+
+</html>
+
