@@ -1,0 +1,9 @@
+<ul>
+	<li><a href="/">home</a></li>
+	{% if current_user.is_authenticated %}
+		<li><a href="/journal">journal</a></li>
+		<li><a href="http://hack.anythingbut.me">hack</a></li>
+		<li><a href={{ url_for('edit') }}>edit</a></li>
+		<li><a href={{ url_for('deauth') }}>logout</a></li>
+	{% endif %}
+</ul>

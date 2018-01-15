@@ -29,15 +29,7 @@
 			</header>
 
 			<nav>
-				<ul>
-					<li><a href="/">Home</a></li>
-					<li><a href="/tech">Tech blog</a></li>
-					{% if current_user.is_authenticated %}
-						<li><a href="/journal">秘密</a></li>
-						<li><a href={{ url_for('edit') }}>Edit</a></li>
-						<li><a href={{ url_for('deauth') }}>Log out</a></li>
-					{% endif %}
-				</ul>
+				{% include 'nav.html' %}
 			</nav>
 		</div><!--
 
