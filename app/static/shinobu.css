@@ -137,7 +137,19 @@ nav a:hover{
 
 /* ------------- SOCIAL -------------- */
 
-#social{}
+#social{
+	font-size: 1.5rem;
+	line-height: 1.5rem;
+	margin: 10px 0 20px;
+}
+
+#social a{
+	color: #888;
+}
+
+#social a:hover{
+	color: var(--highlight-color);
+}
 
 /* ------------- RESPONSIVE ---------- */
 /* tablet & phone */
@@ -151,6 +163,8 @@ nav a:hover{
 	nav ul { text-align: center; }
 	nav li { display: inline; }
 	nav a { display: inline-block; padding: 0 20px; }
+	nav br { display: none; }
+	#social{ text-align: center; font-size: 1.2rem; }
 }
 
 /* desktop */
@@ -172,6 +186,7 @@ nav a:hover{
 	nav { margin-top: 40px; }
 	nav ul { text-align: right; }
 	nav a { display:block; width:100%; padding-right:10px; }
+	#social { text-align: right; font-size:1.5rem; }
 }
 
 @media (min-width: 900px) and (max-width: 1500px) {

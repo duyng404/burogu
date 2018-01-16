@@ -26,9 +26,7 @@
 			</div>
 	</header>
 
-	<nav>
-		{% include 'nav.html' %}
-	</nav>
+	{% include 'nav.html' %}
 
 	{% with messages = get_flashed_messages() %}
 		{% if messages %}

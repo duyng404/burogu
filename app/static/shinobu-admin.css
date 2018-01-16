@@ -140,6 +140,21 @@ nav a:hover{
 	color: #fff;
 }
 
+/* ------------- SOCIAL -------------- */
+
+#social{
+	font-size: 1.5rem;
+	text-align: right;
+}
+
+#social a{
+	color: var(--darkwhite);
+}
+
+#social a:hover{
+	color: var(--highlight-color);
+}
+
 /* ------------- RESPONSIVE ---------- */
 /* tablet & phone */
 @media (max-width: 900px){

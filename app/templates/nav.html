@@ -15,6 +15,18 @@
 </nav>
 
 <div id="social">
-	<a href="google.com"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i></a>
-	<a href="google.com"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i></a>
+	<a href="https://www.facebook.com/ferb96" title="facebook" target="_blank"><i class="fa fa-facebook fa-fw" aria-hidden="true"></i></a>
+	<a href="https://twitter.com/duy96vn" title="twitter" target="_blank"><i class="fa fa-twitter fa-fw" aria-hidden="true"></i></a>
+	<a href="https://www.linkedin.com/in/duy96vn/" title="linkedin" target="_blank"><i class="fa fa-linkedin fa-fw" aria-hidden="true"></i></a>
+	<a href="https://github.com/ferb96" title="github" target="_blank"><i class="fa fa-github fa-fw" aria-hidden="true"></i></a>
+	<a href="{{ url_for('static',filename='resume.pdf') }}" title="resume" target="_blank"><i class="fa fa-file fa-fw" aria-hidden="true"></i></a>
 </div>
+
+<script src="{{ url_for('static',filename='tippy.all.min.js') }}"></script>
+<script>
+tippy('[title]',{
+	theme: 'light',
+	duration: 200,
+	arrow: true
+});
+</script>
