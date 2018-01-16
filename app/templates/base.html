@@ -16,6 +16,7 @@
 	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 	<link href='//fonts.googleapis.com/css?family=Open+Sans|Titillium+Web:400,600,700&subset=latin,vietnamese' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="{{ url_for('static',filename='shinobu.css')}}" type="text/css" />
+	<link rel="stylesheet" href="{{ url_for('static',filename='fontawesome/css/font-awesome.min.css')}}" type="text/css" />
 </head>
 
 <body>
@@ -28,9 +29,7 @@
 					</div>
 			</header>
 
-			<nav>
-				{% include 'nav.html' %}
-			</nav>
+			{% include 'nav.html' %}
 		</div><!--
 
 		--><div id="right">
@@ -49,7 +48,7 @@
 
 	</div>
 
-	<div id="lol">Peekaboo</div>
+	<div id="lol"><a href="/auth">dont click here</a></div>
 	<footer class="centerparent">
 		<p class="centerchild">Anythingbut.me &copy; 2017 F3rb. Powered by Python and Flask.</p>
 	</footer>

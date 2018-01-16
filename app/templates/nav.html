@@ -1,9 +1,20 @@
-<ul>
-	<li><a href="/">home</a></li>
-	{% if current_user.is_authenticated %}
-		<li><a href="/journal">journal</a></li>
-		<li><a href="http://hack.anythingbut.me">hack</a></li>
-		<li><a href={{ url_for('edit') }}>edit</a></li>
-		<li><a href={{ url_for('deauth') }}>logout</a></li>
-	{% endif %}
-</ul>
+<nav>
+	<ul>
+		<li><a href="/">home <i class="fa fa-home fa-fw" aria-hidden="true"></i></a></li>
+		<li><a href="/projects">projects <i class="fa fa-code fa-fw" aria-hidden="true"></i></a></li>
+		<li><a href="/thoughts">thoughts <i class="fa fa-comment fa-fw" aria-hidden="true"></i></a></li>
+		{% if current_user.is_authenticated %}
+			<li></li>
+			<li><a href="/journal">journal</a></li>
+			<li><a href="http://hack.anythingbut.me">hack</a></li>
+			<li><a href={{ url_for('edit') }}>edit</a></li>
+			<li><a href={{ url_for('deauth') }}>logout</a></li>
+		{% endif %}
+		<li></li>
+	</ul>
+</nav>
+
+<div id="social">
+	<a href="google.com"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i></a>
+	<a href="google.com"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i></a>
+</div>

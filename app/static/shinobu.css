@@ -118,8 +118,7 @@ nav ul{
 	padding:0;
 }
 
-nav a{
-	color: var(--highlight-color);
+nav li{
 	height:2rem;
 	line-height: 2rem;
 	text-decoration: none;
@@ -127,10 +126,18 @@ nav a{
 	font-weight: 600;
 }
 
+nav a{
+	color: var(--highlight-color);
+}
+
 nav a:hover{
 	background-color: var(--highlight-color);
 	color: #fff;
 }
+
+/* ------------- SOCIAL -------------- */
+
+#social{}
 
 /* ------------- RESPONSIVE ---------- */
 /* tablet & phone */
