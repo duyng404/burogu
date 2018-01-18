@@ -4,7 +4,7 @@
 		{% if meta and meta['title'] %}
 			<h1>{{ meta['title'] }}</h1>
 		{% endif %}
-		{% if meta and meta['date'] %}<p class="meta-post">{{ meta['date'] }}</p>{% endif %}
+		<p class="meta-post">{% if meta and meta['date'] %}{{ meta['date'] }}{% endif %}</p>
 		{{ content }}
 	</article>
 {% endblock %}

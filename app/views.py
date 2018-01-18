@@ -45,6 +45,7 @@ def getintro(text):
         res.append(word)
         i+=1
         if i>app.config['INTRO_LENGTH']: break
+    if i>app.config['INTRO_LENGTH']: res.append('...')
     return ' '.join(res)
 
 def listfolder(origpath,page,hasindex,listthefiles):
@@ -82,7 +83,10 @@ def listfolder(origpath,page,hasindex,listthefiles):
                 # add link to individual post in meta
                 meta['url']=os.path.join(origpath,filename)
                 # get the intro text from each post
-                meta['intro']=getintro(content)
+                if 'desc' in meta:
+                    meta['intro']=meta['desc']
+                else:
+                    meta['intro']=getintro(content)
                 # append it to the list
                 listofdata.append(meta)
             # sort the list of posts by date

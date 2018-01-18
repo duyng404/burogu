@@ -12,8 +12,8 @@
 		{% for post in posts %}
 			<article>
 				<h2><a href="/{{ post['url'] }}">{% if post['title'] %}{{ post['title'] }}{% endif %}</a></h2>
-				{% if post['date'] %}<p class="meta">{{ post['date'] }}</p>{% endif %}
-				<p>{{ post['intro'] }}...<p>
+				<p class="meta">{% if post['date'] %}{{ post['date'] }}{% endif %}</p>
+				<p>{% if post['intro'] %}{{ post['intro'] }}{% endif %}</p>
 			</article>
 		{% endfor %}
 		<div id="pagination" class="centerparent">
