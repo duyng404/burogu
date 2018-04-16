@@ -8,6 +8,8 @@ import frontmatter
 from operator import itemgetter
 from werkzeug.security import check_password_hash
 
+from datetime import *
+
 @app.before_request
 def before_request():
     g.user = current_user
@@ -77,9 +79,17 @@ def listfolder(origpath,page,hasindex,listthefiles):
                     meta, content = frontmatter.parse(f.read())
                 # turn all meta tags to lowercase
                 meta = dict((k.lower(), v) for k,v in meta.items())
-                # if date tag doesn't exist, add it as empty string. same with title
-                if 'date' not in meta: meta['date']=''
+                # if title tag doesn't exist, add it as empty string
                 if 'title' not in meta: meta['title']='Untitled'
+                # handling date. empty string if nonexistent. otherwise parse it to sort later.
+                if 'date' not in meta: 
+                    meta['date']=''
+                    meta['dateParsed']=''
+                else:
+                    try:
+                        meta['dateParsed']=datetime.strptime(meta['date'],'%B %Y')
+                    except ValueError:
+                        meta['dateParsed']=datetime.strptime(meta['date'],'%Y/%m/%d')
                 # add link to individual post in meta
                 meta['url']=os.path.join(origpath,filename)
                 # get the intro text from each post
@@ -90,7 +100,7 @@ def listfolder(origpath,page,hasindex,listthefiles):
                 # append it to the list
                 listofdata.append(meta)
             # sort the list of posts by date
-            listofdata = sorted(listofdata, key=lambda k: k['date'], reverse=True)
+            listofdata = sorted(listofdata, key=lambda k: k['dateParsed'], reverse=True)
             # check page number
             if len(listofdata)-1 < (page-1)*app.config['PER_PAGE']:
                 flash('Invalid page number')
