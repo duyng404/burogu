@@ -97,7 +97,6 @@ flask/
 
 #app-specific
 pass.txt
-app/static
 content
 burogu_nginx.conf
 burogu_uwsgi.ini
